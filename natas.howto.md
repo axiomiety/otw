@@ -40,8 +40,19 @@ The hint in the page's source tells us the password is located in /etc/natas_web
 # Level 8
 
 The source listing tells us how user input is transformed before being compared to the 'right' value. Reading the transformation function from inside out, input is first encoded in base64, then reversed (strrev) and then converted from binary to hexadecimal. So in order to reverse the encoded value we need to perform the reverse.
+
 1.  bin2hex converts an ASCII string into hexadecimal. 3d3d516343746d4d6d6c315669563362 -> ==QcCtmMml1ViV3b
 2.  strrev reverses the string - so unreversing it: ==QcCtmMml1ViV3b -> b3ViV1lmMmtCcQ==
 3.  and decoding it from base64: b3ViV1lmMmtCcQ== -> oubWYf2kBq
 
 Using this as the input secret gets us there.
+
+# Level 9
+
+At first glance the code snippet allows us to look for a particular word (case insensitive) in a file called dictionary.txt. I first thought the password would be in the file somehow - and to display it all, grepping for new line (\n) does list the contents. However a quick glance through the file doesn't reveal anything interesting. But as we have free reign with the input, we can just as easily grep through anything else. In level 7 we were told some password files were located in /etc/natas_webpass. And by [crafting our input](http://natas9.natas.labs.overthewire.org/?needle=\n%20/etc/natas_webpass/natas10&submit=Search) (\n /etc/natas_webpass/natas10) we can get the script to display its contents.
+
+# Level 10
+
+Very similar to the previous level. However this time characters like ';' and '&' are not allowed. Not a problem since we didn't use any. However the input we used previously doesn't seem to work. Maybe there are no new lines in this file. Instead we grab any letter (remember it's case insensitive) by using '[a-z] /etc/natas_webpass/natas11' and voila.
+
+# Level 11
