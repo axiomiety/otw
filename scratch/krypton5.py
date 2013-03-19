@@ -1,5 +1,6 @@
 #!/usr/bin/python
 import operator
+import re
 import sys
 
 #kk=krypton5.keyCombi([('Y'),('L','R'),('R', 'V', 'Z','Y', 'M', 'S','P', 'X', 'T'),('R','Y'),('L')])
@@ -34,7 +35,11 @@ def encrypt(k,p):
   return VIGENERE_QUADRAT()[k][charIndex(p)]
 
 def decrypt(k,c):
-  return chr(VIGENERE_QUADRAT()[k].index(c)+ord('A'))
+  try:
+    r = chr(VIGENERE_QUADRAT()[k].index(c)+ord('A'))
+  except KeyError as ke:
+    print 'k,c: %s,%s' % (k,c)
+  return r
 
 def getKeyForText(text, key):
   '''
@@ -65,13 +70,6 @@ def keyCombi(lst):
     res = [r + [k] for r in res for k in lst[i]]
   return res
 
-def keyCombi2(ll):
-  res = [[]]
-  for r in ll:
-    for q in r:
-      res.append([subset + [q] for subset in res])
-  return r
-
 def getMonsubCyphertext(f, keylength=6):
   cyphertexts = {}
   with open(f, 'r') as fh:
@@ -97,8 +95,22 @@ def freq(text):
     freqs[c] = count + 1
   byfreq = sorted(freqs.iteritems(), key=operator.itemgetter(1))
   byfreq.reverse()
-  return (byfreq[0][0], byfreq[1][0], byfreq[2][0])
+  return (byfreq[0][0], byfreq[1][0])
+  #return (byfreq[0][0], byfreq[1][0], byfreq[2][0])
   #return (byfreq[0], byfreq[1])
+
+def findSubstr(text):
+  t = text.replace(' ', '')
+  ind = 3
+  substr = t[ind-3:ind]
+  tracker = {}
+  for ch in t[ind:]:
+    if substr not in tracker:
+      tracker[substr] = len([m.start() for m in re.finditer(substr, t[ind:])])
+    ind += 1
+    substr = t[ind-3:ind]
+  print dict((k,v) for (k,v) in tracker.items() if v > 2)
+  #print sortedTracker
 
 def main(argv=None):
   if not argv:
@@ -114,8 +126,16 @@ def main(argv=None):
         print k
         #print ''.join([b for (a,b) in v.items()])
         print v.values()
-        #key = inverse(''.join(v.values()))
-        #print decryptText('BELOSZ', key)
+        potentialKeys = keyCombi(v.values())
+        for kk in potentialKeys:
+          key = inverse(''.join(kk))
+          print decryptText('BELOSZ', key)
+          if len(sys.argv) > 2:
+            with open('found1', 'r') as t:
+              txt = ''.join(t.readlines())
+              txt = txt.replace(' ', '')
+              txt = txt.replace('\n', '')
+              print decryptText(txt, key)
   
 if __name__ == '__main__':
   main()

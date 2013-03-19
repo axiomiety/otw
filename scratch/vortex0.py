@@ -19,7 +19,7 @@ for i in xrange(4): # 4 integers in host byte order, which we know is x86 (littl
 	data.append(struct.unpack('<I', s.recv(4))[0])
 
 # the sum of our 4 ints need to overflow into an int and not a long
-# as the sender expects an int back (trial and error...)
+# as the sender expects an int back (stated in the brief)
 s.send(struct.pack('<I', sum(data) % 2**32))
 print s.recv(2048) # arbitrary length, but should be enough
 s.close()
