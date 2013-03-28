@@ -56,3 +56,28 @@ At first glance the code snippet allows us to look for a particular word (case i
 Very similar to the previous level. However this time characters like ';' and '&' are not allowed. Not a problem since we didn't use any. However the input we used previously doesn't seem to work. Maybe there are no new lines in this file. Instead we grab any letter (remember it's case insensitive) by using '[a-z] /etc/natas_webpass/natas11' and voila.
 
 # Level 11
+
+The hint says cookies are 'protected' using XOR encryption.
+
+    $tempdata = json_decode(xor_encrypt(base64_decode($_COOKIE["data"])), true);
+    if(is_array($tempdata) && array_key_exists("showpassword", $tempdata) && array_key_exists("bgcolor", $tempdata)) {
+        if (preg_match('/^#(?:[a-f\d]{6})$/i', $tempdata['bgcolor'])) {
+        $mydata['showpassword'] = $tempdata['showpassword'];
+        $mydata['bgcolor'] = $tempdata['bgcolor'];
+        }
+
+A quick look through Cookies Manager shows that natas11 stored a cookie called data with content set to 'ClVLIh4ASCsCBE8lAxMacFMZV2hdVVotEhhUJQNVAmhSEV4sFxFeaAw'. The snippet above tells us what we need to do to restore this to a json object - and the only thing we need is the XOR key.
+
+With XOR ciphers, we know that (Plaintext) XOR (Ciphertext) = (Key). We have:
+
+    1. plaintext = json_encode(array( "showpassword"=>"no", "bgcolor"=>"#ffffff")) = {"showpassword":"no","bgcolor":"#ffffff"}
+    2. ciphertext = base64_decode($_COOKIE["data"] = ClVLIh4ASCsCBE8lAxMacFMZV2hdVVotEhhUJQNVAmhSEV4sFxFeaAw)
+
+In the (xor_encrypt) function we set the key to the plaintext. Running (xor_encrypt) on the cipher text yields a key of (qw8J). Sure enough, using this key on the ciphertext yields the plaintext. Step 1, done!
+
+For Step 2, we simply need to save the following by using (qw8J) instead of (<censored>) in the (xor_encrypt) function:
+
+    base64_encode(xor_encrypt(json_encode(array( "showpassword"=>"yes", "bgcolor"=>"#ffffff"))))
+    ClVLIh4ASCsCBE8lAxMacFMOXTlTWxooFhRXJh4FGnBTVF4sFxFeLFMK
+
+in the data section of the natas11 cookie. Refreshing the natas11 landing page shows the password
