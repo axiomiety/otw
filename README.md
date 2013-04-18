@@ -14,7 +14,7 @@ Reverse-engineering. Get ready to whip out gdb!
 ## natas - 11/?
 Web-based - still in progress.
 
-## semtex - 2/?
+## semtex - 3/?
 I needed something to do whilst stuck on krypton.
 
 ## vortex - 2/?
