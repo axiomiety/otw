@@ -1,6 +1,6 @@
 ## [OverTheWire](http://www.overthewire.org/wargames/)
 
-Wargames, in alphabetical order
+Wargames, in alphabetical order (number of level completed / total number of levels - first level is 0)
 
 ## bandit - 24/24
 Relies on having some basic understanding of Linux commands. A gentle introduction to wargames, with some cool tricks.

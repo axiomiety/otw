@@ -52,3 +52,28 @@ One thing to note however (which delayed me for a while) is that this is a *32bi
 And voila.
 
 # Level 3
+
+Right - not so much a wargame as much as a maths one (or something you might get in some annoying RPG). Pressing 1-8 changes locks L1-L5 by a particular amount:
+
+    #| L1| L2|L3|L4| L5
+    -------------------
+    1|  5|  2| 1| 7|  5
+    2| 13| -7|-4| 1|  5
+    3|  9| 12| 9|70| -4
+    4|-11|  9| 0| 5|-13
+    5|  4| 17|12| 9| 24
+    6| 11|-17|21| 5| 14
+    7| 26| 14|43|-7| 17
+    8| 19|-12| 4| 3| -7
+
+We notice some somehow be added to either negate or magnify some changes. For instance the 5/6 or 6/5 combination leaves L2 untouched. So ideally we want to find a series of moves which end up moving all locks in lockstep (haha). But who am I kidding - seeing the above brought back memories of simlutaneous equations. The only downside however is that we have more unknowns than equations:
+
+    5*a+13*b+ 9*c-11*d+ 4*e+11*f+15*g+19*h=100
+    2*a -7*b+12*c+ 9*d+17*e-17*f+31*g-12*h=100
+    1*a -4*b+ 9*c+ 0*d+12*e+21*f+22*g+ 4*h=100
+    7*a+ 1*b+70*c+ 5*d+ 9*e+ 5*f-12*g+ 3*h=100
+    5*a+ 5*b -4*c-13*d+24*e+14*f+ 3*g- 7*h=100
+
+and online simultaneous equations solvers didn't yield much. So instead I wrote a quick brute force solver under certain assumptions (eg, each lock needs to be activated at most 9 times). It's not efficient at all but it took me 2mns to write and got me a solution while I was making a cup of tea, so time well spent. Head over to `otw/scratch` for the source (I should note the solver gives the number of times each lock should be activated).
+
+# Level 4
